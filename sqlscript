@@ -1,0 +1,51 @@
+CREATE TABLE [dbo].[InvocieData](
+
+    [SalesOrderNumber] [nvarchar](20) NOT NULL,
+
+    [ProductName] [nvarchar](250) NULL,
+
+    [ProductSubcategoryName] [nvarchar](250) NULL,
+
+    [CustomerName] [nvarchar](250) NULL,
+
+        [CustomerEmail][nvarchar](250) NULL,
+
+    [SalesAmount] [money] NULL,
+
+    [InvoiceDate] [date] NULL,
+
+        [DueDate] [date] NULL,
+
+) ON [PRIMARY]
+
+GO
+
+ 
+
+Insert into [dbo].[FactappSales]
+
+Select top 1000
+
+SalesOrderNumber,
+
+EnglishProductName  as ProductName,
+
+dpsc.EnglishProductSubcategoryName as ProductSubCategoryName,
+
+dc.LastName  + ', ' + dc.FirstName as CustomerName,
+
+dc.EmailAddress as [CustomerEmail],
+
+SalesAmount,
+
+OrderDate as [InvoiceDate],
+
+[DueDate]
+
+from [dbo].[FactInternetSales] fs
+
+Join DimProduct dp on fs.ProductKey = dp.ProductKey
+
+join DimProductSubcategory dpsc on dpsc.ProductSubcategoryKey = dp.ProductSubcategoryKey
+
+join DimCustomer dc on dc.CustomerKey = fs.CustomerKey
